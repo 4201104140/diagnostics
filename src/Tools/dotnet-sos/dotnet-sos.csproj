@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>Microsoft.Diagnostics.Tools.SOS</RootNamespace>
+    <Description>Diagnostic SOS installer</Description>
+	  <OutputType>Exe</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\Common\CommandExtensions.cs" Link="CommandExtensions.cs" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\SOS\SOS.InstallHelper\SOS.InstallHelper.csproj" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.20574.7" />
+  </ItemGroup>
+
+</Project>

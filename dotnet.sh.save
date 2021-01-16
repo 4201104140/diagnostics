@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+#!/usr/bin/env bash
+
+echo "The name of this script is `basename $0`."echo "The name of this script is `basename $0`."
