@@ -128,3 +128,5 @@ StressLog.txt
 *.binlog
 *.pubxml
 **/.idea/
+
+out

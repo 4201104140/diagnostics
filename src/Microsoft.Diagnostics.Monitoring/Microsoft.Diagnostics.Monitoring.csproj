@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <NoWarn>;1591;1701</NoWarn>
+    <Description>Monitoring for dotnet</Description>
+  </PropertyGroup>
+	
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.Diagnostics.NETCore.Client\Microsoft.Diagnostics.NETCore.Client.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="dotnet-monitor" />
+    <!-- This is temporary until IEndpointInfoSourceInternal becomes public-->
+    <InternalsVisibleTo Include="Microsoft.Diagnostics.Monitoring.RestServer" />
+    <InternalsVisibleTo Include="Microsoft.Diagnostics.Monitoring.EventPipe" />
+    <!--<InternalsVisibleTo Include="DotnetMonitor.UnitTests" />-->
+    <!--<InternalsVisibleTo Include="Microsoft.Diagnostics.Monitoring.EventPipe.UnitTests" />-->
+  </ItemGroup>
+</Project>
