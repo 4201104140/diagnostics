@@ -24,7 +24,7 @@ x64/
 .vscode/
 
 # Per-user project properties
-launchSettings.json
+# launchSettings.json
 
 *_i.c
 *_p.c

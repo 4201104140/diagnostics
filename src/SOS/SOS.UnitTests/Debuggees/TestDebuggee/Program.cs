@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DivZero
+namespace TestDebuggee
 {
     class Program
     {
