@@ -9,16 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SOS", "SOS", "{40DBD09F-C76
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dbgutil", "src\SOS\dbgutil\dbgutil.vcxproj", "{5E1BF5B1-485F-4F98-8DEC-1C6D8BF357BB}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "inc", "inc", "{50781B8C-B17B-4340-AE57-A6499446866C}"
-	ProjectSection(SolutionItems) = preProject
-		src\inc\CMakeLists.txt = src\inc\CMakeLists.txt
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "llvm", "llvm", "{3E88EDB8-5D70-482A-8F52-E33C72260896}"
-	ProjectSection(SolutionItems) = preProject
-		Dwarf.h = Dwarf.h
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -42,8 +32,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{40DBD09F-C767-4B68-83B5-81CF63102340} = {644EE131-BD1B-44BE-B7DF-F1CC56673984}
 		{5E1BF5B1-485F-4F98-8DEC-1C6D8BF357BB} = {40DBD09F-C767-4B68-83B5-81CF63102340}
-		{50781B8C-B17B-4340-AE57-A6499446866C} = {644EE131-BD1B-44BE-B7DF-F1CC56673984}
-		{3E88EDB8-5D70-482A-8F52-E33C72260896} = {50781B8C-B17B-4340-AE57-A6499446866C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {93BC4C01-AF62-4C20-81CB-B5BD0F7E5AAE}

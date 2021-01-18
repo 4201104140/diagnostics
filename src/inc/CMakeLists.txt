@@ -1,8 +1,17 @@
-﻿if(CLR_CMAKE_PLATFORM_UNIX)
-	
-endif(CLR_CMAKE_PLATFORM_UNIX)
+﻿# CMakeList.txt : CMake project for inc, include source and define
+# project specific logic here.
+#
+cmake_minimum_required (VERSION 3.8)
+
+project ("inc")
 
 set( CORGUIDS_IDL_SOURCES
-	
+  cordebug.idl
+
 
 )
+
+# Add source to this project's executable.
+add_executable (inc  )
+
+# TODO: Add tests and install targets if needed.
