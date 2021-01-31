@@ -33,9 +33,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotnet-monitor", "src\Tools
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Diagnostics.Monitoring", "src\Microsoft.Diagnostics.Monitoring\Microsoft.Diagnostics.Monitoring.csproj", "{A738EFB4-B065-4A6C-A1C7-1470A6606E48}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Diagnostics.Monitoring.EventPipe", "src\Microsoft.Diagnostics.Monitoring.EventPipe\Microsoft.Diagnostics.Monitoring.EventPipe.csproj", "{3BF8AB33-52DA-471A-BC2B-45E7B50892D1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Diagnostics.Monitoring.EventPipe", "src\Microsoft.Diagnostics.Monitoring.EventPipe\Microsoft.Diagnostics.Monitoring.EventPipe.csproj", "{3BF8AB33-52DA-471A-BC2B-45E7B50892D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Diagnostics.Monitoring.EventPipe.UnitTests", "src\tests\Microsoft.Diagnostics.Monitoring.EventPipe.UnitTests\Microsoft.Diagnostics.Monitoring.EventPipe.UnitTests.csproj", "{3A278087-5E86-4A70-B197-59CBDC6D6034}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Diagnostics.Monitoring.EventPipe.UnitTests", "src\tests\Microsoft.Diagnostics.Monitoring.EventPipe.UnitTests\Microsoft.Diagnostics.Monitoring.EventPipe.UnitTests.csproj", "{3A278087-5E86-4A70-B197-59CBDC6D6034}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Diagnostics.DebugServices", "src\Microsoft.Diagnostics.DebugServices\Microsoft.Diagnostics.DebugServices.csproj", "{124A6A2F-0D6B-4FB5-A6C8-F004DEA677FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Diagnostics.DebugServices.UnitTests", "src\tests\Microsoft.Diagnostics.DebugServices.UnitTests\Microsoft.Diagnostics.DebugServices.UnitTests.csproj", "{6028399F-4C4D-41E9-A622-72879B686EE6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Diagnostics.DebugServices.Implementation", "src\Microsoft.Diagnostics.DebugServices.Implementation\Microsoft.Diagnostics.DebugServices.Implementation.csproj", "{B7B16CE6-8669-4A9D-9EFF-7EB2C3C206A5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -179,6 +185,42 @@ Global
 		{3A278087-5E86-4A70-B197-59CBDC6D6034}.Release|x64.Build.0 = Release|Any CPU
 		{3A278087-5E86-4A70-B197-59CBDC6D6034}.Release|x86.ActiveCfg = Release|Any CPU
 		{3A278087-5E86-4A70-B197-59CBDC6D6034}.Release|x86.Build.0 = Release|Any CPU
+		{124A6A2F-0D6B-4FB5-A6C8-F004DEA677FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{124A6A2F-0D6B-4FB5-A6C8-F004DEA677FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{124A6A2F-0D6B-4FB5-A6C8-F004DEA677FE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{124A6A2F-0D6B-4FB5-A6C8-F004DEA677FE}.Debug|x64.Build.0 = Debug|Any CPU
+		{124A6A2F-0D6B-4FB5-A6C8-F004DEA677FE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{124A6A2F-0D6B-4FB5-A6C8-F004DEA677FE}.Debug|x86.Build.0 = Debug|Any CPU
+		{124A6A2F-0D6B-4FB5-A6C8-F004DEA677FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{124A6A2F-0D6B-4FB5-A6C8-F004DEA677FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{124A6A2F-0D6B-4FB5-A6C8-F004DEA677FE}.Release|x64.ActiveCfg = Release|Any CPU
+		{124A6A2F-0D6B-4FB5-A6C8-F004DEA677FE}.Release|x64.Build.0 = Release|Any CPU
+		{124A6A2F-0D6B-4FB5-A6C8-F004DEA677FE}.Release|x86.ActiveCfg = Release|Any CPU
+		{124A6A2F-0D6B-4FB5-A6C8-F004DEA677FE}.Release|x86.Build.0 = Release|Any CPU
+		{6028399F-4C4D-41E9-A622-72879B686EE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6028399F-4C4D-41E9-A622-72879B686EE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6028399F-4C4D-41E9-A622-72879B686EE6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6028399F-4C4D-41E9-A622-72879B686EE6}.Debug|x64.Build.0 = Debug|Any CPU
+		{6028399F-4C4D-41E9-A622-72879B686EE6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6028399F-4C4D-41E9-A622-72879B686EE6}.Debug|x86.Build.0 = Debug|Any CPU
+		{6028399F-4C4D-41E9-A622-72879B686EE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6028399F-4C4D-41E9-A622-72879B686EE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6028399F-4C4D-41E9-A622-72879B686EE6}.Release|x64.ActiveCfg = Release|Any CPU
+		{6028399F-4C4D-41E9-A622-72879B686EE6}.Release|x64.Build.0 = Release|Any CPU
+		{6028399F-4C4D-41E9-A622-72879B686EE6}.Release|x86.ActiveCfg = Release|Any CPU
+		{6028399F-4C4D-41E9-A622-72879B686EE6}.Release|x86.Build.0 = Release|Any CPU
+		{B7B16CE6-8669-4A9D-9EFF-7EB2C3C206A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7B16CE6-8669-4A9D-9EFF-7EB2C3C206A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7B16CE6-8669-4A9D-9EFF-7EB2C3C206A5}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B7B16CE6-8669-4A9D-9EFF-7EB2C3C206A5}.Debug|x64.Build.0 = Debug|Any CPU
+		{B7B16CE6-8669-4A9D-9EFF-7EB2C3C206A5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B7B16CE6-8669-4A9D-9EFF-7EB2C3C206A5}.Debug|x86.Build.0 = Debug|Any CPU
+		{B7B16CE6-8669-4A9D-9EFF-7EB2C3C206A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7B16CE6-8669-4A9D-9EFF-7EB2C3C206A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7B16CE6-8669-4A9D-9EFF-7EB2C3C206A5}.Release|x64.ActiveCfg = Release|Any CPU
+		{B7B16CE6-8669-4A9D-9EFF-7EB2C3C206A5}.Release|x64.Build.0 = Release|Any CPU
+		{B7B16CE6-8669-4A9D-9EFF-7EB2C3C206A5}.Release|x86.ActiveCfg = Release|Any CPU
+		{B7B16CE6-8669-4A9D-9EFF-7EB2C3C206A5}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -200,6 +242,9 @@ Global
 		{A738EFB4-B065-4A6C-A1C7-1470A6606E48} = {644EE131-BD1B-44BE-B7DF-F1CC56673984}
 		{3BF8AB33-52DA-471A-BC2B-45E7B50892D1} = {644EE131-BD1B-44BE-B7DF-F1CC56673984}
 		{3A278087-5E86-4A70-B197-59CBDC6D6034} = {C607B853-3119-4ACF-83F4-BB59F68E0AD6}
+		{124A6A2F-0D6B-4FB5-A6C8-F004DEA677FE} = {644EE131-BD1B-44BE-B7DF-F1CC56673984}
+		{6028399F-4C4D-41E9-A622-72879B686EE6} = {C607B853-3119-4ACF-83F4-BB59F68E0AD6}
+		{B7B16CE6-8669-4A9D-9EFF-7EB2C3C206A5} = {644EE131-BD1B-44BE-B7DF-F1CC56673984}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {93BC4C01-AF62-4C20-81CB-B5BD0F7E5AAE}
