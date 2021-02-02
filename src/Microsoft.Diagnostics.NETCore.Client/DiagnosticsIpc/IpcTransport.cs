@@ -18,9 +18,9 @@ namespace Microsoft.Diagnostics.NETCore.Client
         public abstract Task WaitForConnectionAsync(CancellationToken token);
     }
 
-    internal class ServerIpcEndpoint : IpcTransport
-    {
-        private readonly Guid _runtimeId;
-        private readonly 
-    }
+    //internal class ServerIpcEndpoint : IpcTransport
+    //{
+    //    private readonly Guid _runtimeId;
+    //    private readonly 
+    //}
 }
