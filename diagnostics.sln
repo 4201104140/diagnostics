@@ -8,8 +8,14 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotnet-counters", "src\Tools\dotnet-counters\dotnet-counters.csproj", "{D5E9FF92-26E9-4DFD-BAF2-5BF99F3F7CC5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{5946FE39-C5CC-47E3-A9BC-C3F87A8B0144}"
+	ProjectSection(SolutionItems) = preProject
+		src\Tools\Common\CommandExtensions.cs = src\Tools\Common\CommandExtensions.cs
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Commands", "Commands", "{63DC9507-A954-4F67-B0D7-4BDA3464289B}"
+	ProjectSection(SolutionItems) = preProject
+		src\Tools\Common\Commands\ProcessStatus.cs = src\Tools\Common\Commands\ProcessStatus.cs
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{644EE131-BD1B-44BE-B7DF-F1CC56673984}"
 EndProject
@@ -37,11 +43,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Diagnostics.Monit
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Diagnostics.Monitoring.EventPipe.UnitTests", "src\tests\Microsoft.Diagnostics.Monitoring.EventPipe.UnitTests\Microsoft.Diagnostics.Monitoring.EventPipe.UnitTests.csproj", "{3A278087-5E86-4A70-B197-59CBDC6D6034}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Diagnostics.DebugServices", "src\Microsoft.Diagnostics.DebugServices\Microsoft.Diagnostics.DebugServices.csproj", "{124A6A2F-0D6B-4FB5-A6C8-F004DEA677FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Diagnostics.DebugServices", "src\Microsoft.Diagnostics.DebugServices\Microsoft.Diagnostics.DebugServices.csproj", "{124A6A2F-0D6B-4FB5-A6C8-F004DEA677FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Diagnostics.DebugServices.UnitTests", "src\tests\Microsoft.Diagnostics.DebugServices.UnitTests\Microsoft.Diagnostics.DebugServices.UnitTests.csproj", "{6028399F-4C4D-41E9-A622-72879B686EE6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Diagnostics.DebugServices.UnitTests", "src\tests\Microsoft.Diagnostics.DebugServices.UnitTests\Microsoft.Diagnostics.DebugServices.UnitTests.csproj", "{6028399F-4C4D-41E9-A622-72879B686EE6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Diagnostics.DebugServices.Implementation", "src\Microsoft.Diagnostics.DebugServices.Implementation\Microsoft.Diagnostics.DebugServices.Implementation.csproj", "{B7B16CE6-8669-4A9D-9EFF-7EB2C3C206A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Diagnostics.DebugServices.Implementation", "src\Microsoft.Diagnostics.DebugServices.Implementation\Microsoft.Diagnostics.DebugServices.Implementation.csproj", "{B7B16CE6-8669-4A9D-9EFF-7EB2C3C206A5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotnet-trace", "src\Tools\dotnet-trace\dotnet-trace.csproj", "{99BDC8FD-D7FC-4D48-8C57-7CAEFEE5FBE8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -221,6 +229,18 @@ Global
 		{B7B16CE6-8669-4A9D-9EFF-7EB2C3C206A5}.Release|x64.Build.0 = Release|Any CPU
 		{B7B16CE6-8669-4A9D-9EFF-7EB2C3C206A5}.Release|x86.ActiveCfg = Release|Any CPU
 		{B7B16CE6-8669-4A9D-9EFF-7EB2C3C206A5}.Release|x86.Build.0 = Release|Any CPU
+		{99BDC8FD-D7FC-4D48-8C57-7CAEFEE5FBE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99BDC8FD-D7FC-4D48-8C57-7CAEFEE5FBE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99BDC8FD-D7FC-4D48-8C57-7CAEFEE5FBE8}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{99BDC8FD-D7FC-4D48-8C57-7CAEFEE5FBE8}.Debug|x64.Build.0 = Debug|Any CPU
+		{99BDC8FD-D7FC-4D48-8C57-7CAEFEE5FBE8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{99BDC8FD-D7FC-4D48-8C57-7CAEFEE5FBE8}.Debug|x86.Build.0 = Debug|Any CPU
+		{99BDC8FD-D7FC-4D48-8C57-7CAEFEE5FBE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99BDC8FD-D7FC-4D48-8C57-7CAEFEE5FBE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99BDC8FD-D7FC-4D48-8C57-7CAEFEE5FBE8}.Release|x64.ActiveCfg = Release|Any CPU
+		{99BDC8FD-D7FC-4D48-8C57-7CAEFEE5FBE8}.Release|x64.Build.0 = Release|Any CPU
+		{99BDC8FD-D7FC-4D48-8C57-7CAEFEE5FBE8}.Release|x86.ActiveCfg = Release|Any CPU
+		{99BDC8FD-D7FC-4D48-8C57-7CAEFEE5FBE8}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -245,6 +265,7 @@ Global
 		{124A6A2F-0D6B-4FB5-A6C8-F004DEA677FE} = {644EE131-BD1B-44BE-B7DF-F1CC56673984}
 		{6028399F-4C4D-41E9-A622-72879B686EE6} = {C607B853-3119-4ACF-83F4-BB59F68E0AD6}
 		{B7B16CE6-8669-4A9D-9EFF-7EB2C3C206A5} = {644EE131-BD1B-44BE-B7DF-F1CC56673984}
+		{99BDC8FD-D7FC-4D48-8C57-7CAEFEE5FBE8} = {BDF12DB7-77E7-4F4A-BD1B-6A073E5FB839}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {93BC4C01-AF62-4C20-81CB-B5BD0F7E5AAE}
