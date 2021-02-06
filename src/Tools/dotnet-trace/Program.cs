@@ -1,4 +1,5 @@
-﻿using Microsoft.Internal.Common.Utils;
+﻿using Microsoft.Internal.Common.Commands;
+//using Microsoft.Internal.Common.Utils;
 using System;
 using System.Collections.Generic;
 using System.CommandLine.Builder;
@@ -13,18 +14,11 @@ namespace Microsoft.Diagnostics.Tools.Trace
         {
             var parser = new CommandLineBuilder()
                 .AddCommand(CollectCommandHandler.CollectCommand())
+                .AddCommand(ProcessStatusCommandHandler.ProcessStatusCommand("Lists the dotnet processes that traces can be collected"))
+                .AddCommand(ConvertCommandHandler.ConvertCommand())
                 .UseDefaults()
                 .Build();
-            ParseResult parseResult = parser.Parse(args);
-            string parsedCommandName = parseResult.CommandResult.Command.Name;
-            if (parsedCommandName == "collect")
-            {
-                IReadOnlyCollection<string> unparsedToken = parseResult.UnparsedTokens;
-                if (unparsedToken.Count > 0)
-                {
-                    ProcessLauncher.Launcher.PrepareChildProcess(args);
-                }
-            }
+
             return parser.InvokeAsync(args);
         }
     }

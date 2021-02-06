@@ -20,35 +20,35 @@ namespace Microsoft.Diagnostics.Tools.Trace
             { TraceFileFormat.Chromium, "chromium.json" }
         };
 
-        public static void ConvertToFormat(TraceFileFormat format, string fileToConvert, string outputFilename = "")
-        {
-            if (string.IsNullOrWhiteSpace(outputFilename))
-                outputFilename = fileToConvert;
+        //public static void ConvertToFormat(TraceFileFormat format, string fileToConvert, string outputFilename = "")
+        //{
+        //    if (string.IsNullOrWhiteSpace(outputFilename))
+        //        outputFilename = fileToConvert;
 
-            outputFilename = Path.ChangeExtension(outputFilename, TraceFileFormatExtensions[format]);
-            Console.Out.WriteLine($"Writing:\t{outputFilename}");
+        //    outputFilename = Path.ChangeExtension(outputFilename, TraceFileFormatExtensions[format]);
+        //    Console.Out.WriteLine($"Writing:\t{outputFilename}");
 
-            switch (format)
-            {
-                case TraceFileFormat.NetTrace:
-                    break;
-                case TraceFileFormat.Speedscope:
-                case TraceFileFormat.Chromium:
-                    try
-                    {
-                        Convert(format, )
-                    }
-            }
-        }
+        //    switch (format)
+        //    {
+        //        case TraceFileFormat.NetTrace:
+        //            break;
+        //        case TraceFileFormat.Speedscope:
+        //        case TraceFileFormat.Chromium:
+        //            try
+        //            {
+        //                Convert(format, )
+        //            }
+        //    }
+        //}
 
-        private static void Convert(TraceFileFormat format, string fileToConvert, string outputFilename, bool continueOnError = false)
-        {
-            var etlxFilePath = TraceLog.CreateFromEventPipeDataFile(fileToConvert, null, new TraceLogOptions() { ContinueOnError = continueOnError });
-            using (var symbolReader = new SymbolReader(TextWriter.Null) { SymbolPath = SymbolPath.MicrosoftSymbolServerPath})
-            using (var eventLog = new TraceLog(etlxFilePath))
-            {
-                var stackSource = new MutableTraceEventStackSource
-            }
-        }
+        //private static void Convert(TraceFileFormat format, string fileToConvert, string outputFilename, bool continueOnError = false)
+        //{
+        //    var etlxFilePath = TraceLog.CreateFromEventPipeDataFile(fileToConvert, null, new TraceLogOptions() { ContinueOnError = continueOnError });
+        //    using (var symbolReader = new SymbolReader(TextWriter.Null) { SymbolPath = SymbolPath.MicrosoftSymbolServerPath})
+        //    using (var eventLog = new TraceLog(etlxFilePath))
+        //    {
+        //        var stackSource = new MutableTraceEventStackSource
+        //    }
+        //}
     }
 }

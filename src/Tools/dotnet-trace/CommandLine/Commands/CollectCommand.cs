@@ -1,9 +1,14 @@
-﻿using System;
+﻿
+using Microsoft.Tools.Common;
+using System;
 using System.Collections.Generic;
 using System.CommandLine;
+using System.CommandLine.Binding;
+//using System.CommandLine.Rendering;
 using System.Diagnostics;
 using System.IO;
-using System.Text;
+using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,14 +26,38 @@ namespace Microsoft.Diagnostics.Tools.Trace
                 Debug.Assert(output != null);
                 Debug.Assert(profile != null);
 
-                if ()
+                Console.WriteLine("Hi");
             }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"[ERROR] {ex.ToString()}");
+                ret = ErrorCodes.TracingError;
+            }
+
+            return await Task.FromResult(ret);
         }
 
         public static Command CollectCommand() =>
             new Command(
                 name: "collect",
                 description: "Collects a diagnostic trace from a currently running process")
+            {
+                // Handler
+                //HandlerDescriptor.FromDelegate((CollectDelegate)Collect).GetCommandHandler(),
+                // Options
+                CommonOptions.ProcessIdOption(),
+
+                CommonOptions.FormatOption(),
+
+                CommonOptions.NameOption()
+            };
+
+        private static uint DefaultCircularBufferSizeInMB() => 256;
+
+        private static Option CircularBufferOption() =>
+            new Option(
+                alias: "--buffersize",
+                description: $"Sets the size of the in-memory circular buffer in megabytes. Default {DefaultCircularBufferSizeInMB()} MB.")
             {
 
             };

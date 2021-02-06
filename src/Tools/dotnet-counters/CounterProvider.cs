@@ -12,7 +12,7 @@ namespace Microsoft.Diagnostics.Tools.Counters
         public string Description { get; }
         public string Keywords { get; }
         public string Level { get; }
-        public Dictionary<string, CounterProfile>
+        //public Dictionary<string, CounterProfile>
     }
 
     public class CounterProfile

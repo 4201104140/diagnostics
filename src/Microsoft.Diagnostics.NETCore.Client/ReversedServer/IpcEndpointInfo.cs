@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿//using System;
+//using System.Collections.Generic;
+//using System.Text;
 
-namespace Microsoft.Diagnostics.NETCore.Client
-{
-    internal struct IpcEndpointInfo
-    {
-        internal IpcEndpointInfo(IpcEndpoint)
-    }
-}
+//namespace Microsoft.Diagnostics.NETCore.Client
+//{
+//    internal struct IpcEndpointInfo
+//    {
+//        internal IpcEndpointInfo(IpcEndpoint)
+//    }
+//}

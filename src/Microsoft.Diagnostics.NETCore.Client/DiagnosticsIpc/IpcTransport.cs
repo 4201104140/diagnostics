@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
+
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -46,13 +46,6 @@ namespace Microsoft.Diagnostics.NETCore.Client
         public abstract Task WaitForConnectionAsync(CancellationToken token);
     }
 
-    
-    //internal class ServerIpcEndpoint : IpcTransport
-    //{
-    //    private readonly Guid _runtimeId;
-    //    private readonly 
-    //}
-
     internal class PidIpcEndpoint : IpcEndpoint
     {
         public static string IpcRootPath { get; } = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? @"\\.\pipe\" : Path.GetTempPath();
@@ -60,6 +53,12 @@ namespace Microsoft.Diagnostics.NETCore.Client
 
         private int _pid;
 
+        /// <summary>
+        /// Creates a reference to a .NET process's IPC Transport
+        /// using the default rules for a given pid
+        /// </summary>
+        /// <param name="pid">The pid of the target process</param>
+        /// <returns>A reference to the IPC Transport</returns>
         public PidIpcEndpoint(int pid)
         {
             _pid = pid;
@@ -81,8 +80,42 @@ namespace Microsoft.Diagnostics.NETCore.Client
             }
             else
             {
-                var socket = new UnixDomainSocket
+                var socket = new UnixDomainSocket();
+                socket.Connect(Path.Combine(IpcRootPath, address), timeout);
+                return new ExposedSocketNetworkStream(socket, ownsSocket: true);
             }
+        }
+
+        public override async Task<Stream> ConnectAsync(CancellationToken token)
+        {
+            string address = GetDefaultAddress();
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                var namedPipe = new NamedPipeClientStream(
+                    ".",
+                    address,
+                    PipeDirection.InOut,
+                    PipeOptions.None,
+                    TokenImpersonationLevel.Impersonation);
+                await namedPipe.ConnectAsync(token).ConfigureAwait(false);
+                return namedPipe;
+            }
+            else
+            {
+                var socket = new UnixDomainSocket();
+                await socket.ConnectAsync(Path.Combine(IpcRootPath, address), token).ConfigureAwait(false);
+                return new ExposedSocketNetworkStream(socket, ownsSocket: true);
+            }
+        }
+
+        public override void WaitForConnection(TimeSpan timeout)
+        {
+            using var _ = Connect(timeout);
+        }
+
+        public override async Task WaitForConnectionAsync(CancellationToken token)
+        {
+            using var _ = await ConnectAsync(token).ConfigureAwait(false);
         }
 
         private string GetDefaultAddress()
