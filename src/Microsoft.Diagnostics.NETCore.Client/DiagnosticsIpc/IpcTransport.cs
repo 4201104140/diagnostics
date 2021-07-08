@@ -46,6 +46,12 @@ namespace Microsoft.Diagnostics.NETCore.Client
         public abstract Task WaitForConnectionAsync(CancellationToken token);
     }
 
+    //internal class ServerIpcEndpoint : IpcEndpoint
+    //{
+    //    private readonly Guid _runtimeId;
+    //    private readonly ReversedDiagnosticsServer
+    //}
+
     internal class PidIpcEndpoint : IpcEndpoint
     {
         public static string IpcRootPath { get; } = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? @"\\.\pipe\" : Path.GetTempPath();

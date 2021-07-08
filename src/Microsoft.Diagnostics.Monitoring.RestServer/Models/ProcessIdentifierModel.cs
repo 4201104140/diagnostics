@@ -11,6 +11,6 @@ namespace Microsoft.Diagnostics.Monitoring.RestServer.Models
 
         public Guid Uid { get; set; }
 
-        internal static ProcessIdentifierModel FromProcessInfo(IProcessInfo)
+        //internal static ProcessIdentifierModel FromProcessInfo(IProcessInfo)
     }
 }

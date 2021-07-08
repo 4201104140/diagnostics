@@ -1,4 +1,8 @@
-﻿//using Microsoft.Diagnostics.Monitoring;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using Microsoft.Diagnostics.Monitoring;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Tools.Common;
 using System;
@@ -8,7 +12,6 @@ using System.CommandLine.Invocation;
 using System.CommandLine.Parsing;
 using System.Threading;
 using System.Threading.Tasks;
-
 namespace Microsoft.Diagnostics.Tools.Monitor
 {
     [Flags]
@@ -22,14 +25,13 @@ namespace Microsoft.Diagnostics.Tools.Monitor
     class Program
     {
         private static Command CollectCommand() =>
-              new Command(
-                  name: "collect",
-                  description: "Monitor logs and metrics in a .NET application send the results to a chosen destination.")
-              {
-                // Handler
-                CommandHandler.Create<CancellationToken, IConsole, string[], string[], bool, string>(new DiagnosticsMonitorCommandHandler().Start),
-                Urls(), MetricUrls(), ProvideMetrics(), DiagnosticPort()
-              };
+            new Command(
+                name: "collect",
+                description: "Monitor logs and metrics in a .NET application send the results to a chosen destination.")
+            {
+                CommandHandler.Create<CancellationToken, IConsole, string[], string[], bool, string>()
+                Urls(), MetricUrls(), ProviderMetrics(), DiagnosticPort()
+            };
 
         private static Option Urls() =>
             new Option(
@@ -41,13 +43,13 @@ namespace Microsoft.Diagnostics.Tools.Monitor
 
         private static Option MetricUrls() =>
             new Option(
-                aliases: new[] { "--metricUrls" },
+                aliases: new[] { "--meticUrls" },
                 description: "Bindings for metrics")
             {
                 Argument = new Argument<string[]>(name: "metricUrls", getDefaultValue: () => new[] { GetDefaultMetricsEndpoint() })
             };
 
-        private static Option ProvideMetrics() =>
+        private static Option ProviderMetrics() =>
             new Option(
                 aliases: new[] { "-m", "--metrics" },
                 description: "Enable publishing of metrics")
@@ -66,11 +68,11 @@ namespace Microsoft.Diagnostics.Tools.Monitor
         private static string GetDefaultMetricsEndpoint()
         {
             string endpoint = "http://localhost:52325";
-            //if (RuntimeInfo.IsInDockerContainer)
-            //{
-            //    //Necessary for prometheus scraping
-            //    endpoint = "http://*:52325";
-            //}
+            if (RuntimeInfo.IsInDockerContainer)
+            {
+                //Necessary for prometheus scraping
+                endpoint = "http://*:52325";
+            }
             return endpoint;
         }
 

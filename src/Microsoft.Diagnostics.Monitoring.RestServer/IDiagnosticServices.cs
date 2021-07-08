@@ -7,7 +7,7 @@ namespace Microsoft.Diagnostics.Monitoring.RestServer
 {
     internal interface IDiagnosticServices : IDisposable
     {
-        Task<IEnumerable<>>
+        //Task<IEnumerable<>>
     }
 
     internal interface IProcessInfo

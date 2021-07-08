@@ -3,6 +3,8 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RuntimeIdentifiers>linux-x64;linux-musl-x64;win-x64</RuntimeIdentifiers>
+    <PackAsToolShimRuntimeIdentifiers>linux-x64;linux-musl-x64;win-x64</PackAsToolShimRuntimeIdentifiers>	  
     <RootNamespace>Microsoft.Diagnostics.Tools.Monitor</RootNamespace>
     <Description>.NET Core Diagnostic Monitoring Tool</Description>	  
   </PropertyGroup>
@@ -17,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Microsoft.Diagnostics.Monitoring.RestServer\Microsoft.Diagnostics.Monitoring.RestServer.csproj" />
+    <ProjectReference Include="..\..\Microsoft.Diagnostics.Monitoring\Microsoft.Diagnostics.Monitoring.csproj" />
   </ItemGroup>
 
 </Project>

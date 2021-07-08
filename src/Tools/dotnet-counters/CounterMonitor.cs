@@ -1,15 +1,19 @@
-﻿using System;
+﻿
+using Microsoft.Diagnostics.NETCore.Client;
+using System;
 using System.Collections.Generic;
 using System.CommandLine;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Diagnostics.NETCore.Client;
-using Microsoft.Diagnostics.Tools.Counters.Exporters;
+
 using Microsoft.Diagnostics.Tracing;
+using Microsoft.Diagnostics.Tools.Counters.Exporters;
+using Microsoft.Internal.Common.Utils;
+using System.CommandLine.IO;
 
 namespace Microsoft.Diagnostics.Tools.Counters
 {
@@ -24,6 +28,7 @@ namespace Microsoft.Diagnostics.Tools.Counters
         private CounterFilter filter;
         private string _output;
         private bool pauseCmdSet;
+        private ManualResetEvent shouldExit;
         private bool shouldResumeRuntime;
         private DiagnosticsClient _diagnosticsClient;
         private EventPipeSession _session;
@@ -83,7 +88,7 @@ namespace Microsoft.Diagnostics.Tools.Counters
             _renderer.Stop();
         }
 
-        public async Task<int> Monitor(CancellationToken ct, List<string> counter_list, string counters, IConsole console, int processId, int refreshInterval, string name, string diagnosticPort)
+        public async Task<int> Monitor(CancellationToken ct, List<string> counter_list, string counters, IConsole console, int processId, int refreshInterval, string name, string diagnosticPort, bool resumeRuntime)
         {
             await Task.CompletedTask;
             return 0;

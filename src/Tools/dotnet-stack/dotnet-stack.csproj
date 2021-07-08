@@ -4,6 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>Microsoft.Diagnostics.Tools.Stack</RootNamespace>
+    <Description>.NET Stack Printing Tool</Description>	  
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,6 +12,14 @@
     <PackageReference Include="System.CommandLine.Rendering" Version="0.3.0-alpha.20574.7" />
   </ItemGroup>
 	
-           
+  <ItemGroup>
+    <ProjectReference Include="$(MSBuildThisFileDirectory)..\..\Microsoft.Diagnostics.NETCore.Client\Microsoft.Diagnostics.NETCore.Client.csproj" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <Compile Include="..\Common\CommandExtensions.cs" Link="CommandExtensions.cs" />
+    <Compile Include="..\Common\Commands\ProcessStatus.cs" Link="ProcessStatus.cs" />
+    <Compile Include="..\Common\Commands\Utils.cs" Link="Utils.cs" />
+  </ItemGroup>	
 
 </Project>
