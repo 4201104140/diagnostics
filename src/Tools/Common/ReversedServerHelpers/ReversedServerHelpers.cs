@@ -129,48 +129,52 @@ namespace Microsoft.Internal.Common.Utils
         }
     }
 
-    //internal class DiagnosticsClientHolder : IDisposable
-    //{
-    //    public DiagnosticsClient Client;
-    //    public IpcEndpointInfo EndpointInfo;
+    internal class DiagnosticsClientHolder : IDisposable
+    {
+        public DiagnosticsClient Client;
+        public IpcEndpointInfo EndpointInfo;
 
-    //    private ReversedDiagnosticsServer _server;
-    //    private readonly string _port;
+        private readonly string _port;
 
-    //    public DiagnosticsClientHolder(DiagnosticsClient client)
-    //    {
-    //        Client = client;
-    //        _port = null;
-    //        _server = null;
-    //    }
+        public DiagnosticsClientHolder(DiagnosticsClient client)
+        {
+            Client = client;
+            _port = null;
+        }
 
-    //    public DiagnosticsClientHolder(DiagnosticsClient client, IpcEndpointInfo endpointInfo, ReversedDiagnosticsServer server)
-    //    {
-    //        Client = client;
-    //        EndpointInfo = endpointInfo;
-    //        _port = null;
-    //        _server = server;
-    //    }
+        public async void Dispose()
+        {
+            if (!string.IsNullOrEmpty(_port) && File.Exists(_port))
+            {
+                File.Delete(_port);
+            }
+            ProcessLauncher.Launcher.Cleanup();
+            await Task.CompletedTask;
+        }
+    }
 
-    //    public DiagnosticsClientHolder(DiagnosticsClient client, IpcEndpointInfo endpointInfo, string port, ReversedDiagnosticsServer server)
-    //    {
-    //        Client = client;
-    //        EndpointInfo = endpointInfo;
-    //        _port = port;
-    //        _server = server;
-    //    }
+    internal class DiagnosticsClientBuilder
+    {
+        private string _toolName;
+        private int _timeoutInSec;
 
-    //    public async void Dispose()
-    //    {
-    //        if (!string.IsNullOrEmpty(_port) && File.Exists(_port))
-    //        {
-    //            File.Delete(_port);
-    //        }
-    //        ProcessLauncher.Launcher.Cleanup();
-    //        if (_server != null)
-    //        {
-    //            await _server.DisposeAsync();
-    //        }
-    //    }
-    //}
+        private string GetTransportName(string toolName) => $"{toolName}-{Process.GetCurrentProcess().Id}-{DateTime.Now:yyyyMMdd_HHmmss}.socket";
+
+        public DiagnosticsClientBuilder(string toolName, int timeoutInSec)
+        {
+            _toolName = toolName;
+            _timeoutInSec = timeoutInSec;
+        }
+
+        public async Task<DiagnosticsClientHolder> Build(CancellationToken ct, int processId, string portName, bool showChildIO, bool printLaunchCommand)
+        {
+            if (ProcessLauncher.Launcher.HasChildProc)
+            {
+                // Create and start the reversed server
+                await Task.CompletedTask;
+            }
+
+            return new DiagnosticsClientHolder(new DiagnosticsClient(processId));
+        }
+    }
 }

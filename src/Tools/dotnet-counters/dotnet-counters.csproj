@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -8,15 +8,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)..\dotnet-trace\Extensions.cs" Link="Extensions.cs" />
     <Compile Include="..\Common\CommandExtensions.cs" Link="CommandExtensions.cs" />
     <Compile Include="..\Common\Commands\ProcessStatus.cs" Link="ProcessStatus.cs" />
-    <!--<Compile Include="..\Common\ReversedServerHelpers\ReversedServerHelpers.cs" Link="ReversedServerHelpers.cs" />-->
+    <Compile Include="..\Common\ReversedServerHelpers\ReversedServerHelpers.cs" Link="ReversedServerHelpers.cs" />
     <Compile Include="..\Common\Commands\Utils.cs" Link="Utils.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Diagnostics.NETCore.Client" Version="0.2.160202" />
     <PackageReference Include="Microsoft.Diagnostics.Tracing.TraceEvent" Version="2.0.64" />
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.20574.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Microsoft.Diagnostics.NETCore.Client\Microsoft.Diagnostics.NETCore.Client.csproj" />
   </ItemGroup>	
 </Project>

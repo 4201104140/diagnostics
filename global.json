@@ -1,9 +1,10 @@
 {
   "tools": {
-    "dotnet": "5.0.100",
+    "dotnet": "6.0.100-preview.1.21103.13",
     "runtimes": {
       "dotnet/x64": [
         "$(MicrosoftNETCoreApp31Version)",
+        "$(MicrosoftNETCoreApp50Version)",
         "$(VSRedistCommonNetCoreSharedFrameworkx6460Version)"
       ],
       "dotnet/x86": [

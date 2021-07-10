@@ -90,14 +90,149 @@ namespace Microsoft.Diagnostics.Tools.Counters
 
         public async Task<int> Monitor(CancellationToken ct, List<string> counter_list, string counters, IConsole console, int processId, int refreshInterval, string name, string diagnosticPort, bool resumeRuntime)
         {
+            if (!ProcessLauncher.Launcher.HasChildProc && !CommandUtils.ValidateArgumentsForAttach(processId, name, diagnosticPort, out _processId))
+            {
+
+            }
             await Task.CompletedTask;
             return 0;
         }
 
-        public async Task<int> Collect(CancellationToken ct, List<string> counter_list, string counters, IConsole console, int processId, int refreshInterval, CountersExportFormat format, string output, string name, string diagnosticPort)
+        public async Task<int> Collect(CancellationToken ct, List<string> counter_list, string counters, IConsole console, int processId, int refreshInterval, CountersExportFormat format, string output, string name, string diagnosticPort, bool resumeRuntime)
         {
+            if (!ProcessLauncher.Launcher.HasChildProc)
+            {
+                return ReturnCode.ArgumentError;
+            }
+            shouldExit = new ManualResetEvent(false);
+            _ct.Register(() => shouldExit.Set());
+
+
             await Task.CompletedTask;
             return 0;
+        }
+
+        private string BuildProviderString()
+        {
+            string providerString;
+            if (_counterList.Count == 0)
+            {
+                CounterProvider defaultProvider = null;
+                _console.Out.WriteLine($"--counters is unspecified. Monitoring System.Runtime counters by default.");
+
+                // Enable the default profile if nothing is specified
+
+                providerString = defaultProvider.ToProviderString(_interval);
+                filter.AddFilter("System.Runtime");
+            }
+            else
+            {
+                CounterProvider provider = null;
+                StringBuilder sb = new StringBuilder("");
+                for (var i = 0; i < _counterList.Count; i++)
+                {
+                    string counterSpecifier = _counterList[i];
+                    string[] tokens = counterSpecifier.Split('[');
+                    string providerName = tokens[0];
+                    if (false)
+                    {
+
+                    }
+                    else
+                    {
+                        sb.Append(provider.ToProviderString(_interval));
+                    }
+                    if (i != _counterList.Count - 1)
+                    {
+                        sb.Append(",");
+                    }
+
+                    if (tokens.Length == 1)
+                    {
+                        filter.AddFilter(providerName);
+                    }
+                    else
+                    {
+                        string counterNames = tokens[1];
+                        string[] enabledCounters = counterNames.Substring(0, counterNames.Length - 2).Split(',');
+
+                        filter.AddFilter(providerName, enabledCounters);
+                    }
+                }
+                providerString = sb.ToString();
+            }
+            return providerString;
+        }
+
+        private async Task<int> Start()
+        {
+            string providerString = BuildProviderString();
+            if (providerString.Length == 0)
+            {
+                return ReturnCode.ArgumentError;
+            }
+
+            _renderer.Initialize();
+
+            Task monitorTask = new Task(() => {
+                try
+                {
+                    _session = _diagnosticsClient.StartEventPipeSession(Trace.Extensions.ToProviders(providerString), false, 10);
+                    if (shouldResumeRuntime)
+                    {
+                        _diagnosticsClient.ResumeRuntime();
+                    }
+                    var source = new EventPipeEventSource(_session.EventStream);
+                    source.Dynamic.All += DynamicAllMonitor;
+                    _renderer.EventPipeSourceConnected();
+                    source.Process();
+                }
+                catch (DiagnosticsClientException ex)
+                {
+                    Console.WriteLine($"Failed to start the counter session: {ex.ToString()}");
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[ERROR] {ex.ToString()}");
+                }
+                finally
+                {
+                    shouldExit.Set();
+                }
+            });
+
+            monitorTask.Start();
+
+            while (!shouldExit.WaitOne(250))
+            {
+                while (true)
+                {
+                    if (shouldExit.WaitOne(250))
+                    {
+                        StopMonitor();
+                        return ReturnCode.Ok;
+                    }
+                    if (Console.KeyAvailable)
+                    {
+                        break;
+                    }
+                }
+                ConsoleKey cmd = Console.ReadKey(true).Key;
+                if (cmd == ConsoleKey.Q)
+                {
+                    StopMonitor();
+                    break;
+                }
+                else if (cmd == ConsoleKey.P)
+                {
+                    pauseCmdSet = true;
+                }
+                else if (cmd == ConsoleKey.R)
+                {
+                    pauseCmdSet = false;
+                }
+            }
+            return await Task.FromResult(ReturnCode.Ok);
         }
     }    
 }

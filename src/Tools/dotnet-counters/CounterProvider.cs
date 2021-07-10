@@ -13,6 +13,11 @@ namespace Microsoft.Diagnostics.Tools.Counters
         public string Keywords { get; }
         public string Level { get; }
         //public Dictionary<string, CounterProfile>
+
+        public string ToProviderString(int interval)
+        {
+            return $"{Name}:{Keywords}:{Level}:EventCounterIntervalSec={interval}";
+        }
     }
 
     public class CounterProfile

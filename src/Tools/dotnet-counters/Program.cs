@@ -30,10 +30,21 @@ namespace Microsoft.Diagnostics.Tools.Counters
                 // Handler
                 HandlerDescriptor.FromDelegate((MonitorDelegate)new CounterMonitor().Monitor).GetCommandHandler(),
             };
-        
+
+        private static Command CollectCommand() =>
+            new Command(
+                name: "collect",
+                description: "Monitor counters in a .NET application and export the result into a file")
+            {
+                HandlerDescriptor.FromDelegate((CollectDelegate)new CounterMonitor().Collect).GetCommandHandler()
+            };
+
+
         private static Task<int> Main(string[] args)
         {
             var parser = new CommandLineBuilder()
+                .AddCommand(MonitorCommand())
+                .AddCommand(CollectCommand())
                 .Build();
 
             ParseResult parseResult = parser.Parse(args);
