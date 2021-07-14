@@ -1,8 +1,12 @@
-﻿using Microsoft.Internal.Common.Utils;
+﻿
+using Microsoft.Diagnostics.NETCore.Client;
+using Microsoft.Internal.Common.Utils;
 using System;
-using System.Collections.Generic;
 using System.CommandLine;
-using System.Text;
+using System.CommandLine.IO;
+using System.Diagnostics;
+using System.IO;
+using System.Runtime.InteropServices;
 
 namespace Microsoft.Diagnostics.Tools.Dump
 {
@@ -52,11 +56,59 @@ namespace Microsoft.Diagnostics.Tools.Dump
             {
                 if (output == null)
                 {
-                    // Build timestamp file path
-                    string timestamp = $"{DateTime.Now:yyyyMMdd_Hh}";
+                    // Build timestamp based file path
+                    string timestamp = $"{DateTime.Now:yyyyMMdd_HHmmss}";
+                    output = Path.Combine(Directory.GetCurrentDirectory(), RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? $"dump_{timestamp}.dmp" : $"core_{timestamp}");
+                }
+                // Make sure the dump path is NOT relative. This path could be sent to the runtime
+                // process on Linux which may have a different current directory.
+                output = Path.GetFullPath(output);
 
+                // Display the type of dump and dump path
+                string dumpTypeMessage = null;
+                switch (type)
+                {
+                    case DumpTypeOption.Full:
+                        dumpTypeMessage = "full";
+                        break;
+                    case DumpTypeOption.Heap:
+                        dumpTypeMessage = "dump with heap";
+                        break;
+                    case DumpTypeOption.Mini:
+                        dumpTypeMessage = "dump";
+                        break;
+                }
+                console.Out.WriteLine($"Writing {dumpTypeMessage} to output");
+
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    // Get the process
+                    Process process = Process.GetProcessById(processId);
+
+                    Windows.CollectDump(process, output, type);
+                }
+                else
+                {
+                    
                 }
             }
+            catch (Exception ex) when
+                (ex is FileNotFoundException ||
+                 ex is DirectoryNotFoundException ||
+                 ex is UnauthorizedAccessException ||
+                 ex is PlatformNotSupportedException ||
+                 ex is UnsupportedCommandException ||
+                 ex is InvalidDataException ||
+                 ex is InvalidOperationException ||
+                 ex is NotSupportedException ||
+                 ex is DiagnosticsClientException)
+            {
+                console.Error.WriteLine($"{ex.Message}");
+                return 1;
+            }
+
+            console.Out.WriteLine($"Complete");
+            return 0;
         }
     }
 }

@@ -45,7 +45,84 @@ namespace Microsoft.Diagnostics.Monitoring
         private Task _stopTask;
         private Task _cleanupTask;
 
-        public Task StopAsync(CancellationToken token)
+        protected abstract Task OnRun(CancellationToken token);
+
+        protected virtual Task OnCleanup() => Task.CompletedTask;
+
+        protected virtual Task OnStop(CancellationToken token) => Task.CompletedTask;
+
+        /// <summary>
+        /// Causes an unstarted pipeline to start running, which makes data flow from source
+        /// to sink. Calling this more than once doesn't have any additional effect and returns
+        /// the same Task. Once the pipeline transitions to the Stopped state the returned Task
+        /// will be complete or cancelled.
+        /// </summary>
+        /// <param name="token">If this token is cancelled, it signals the pipeline to abandon all data transfer
+        /// operations as quickly as possible.
+        /// </param>
+        /// <exception cref="PipelineException">For any error that prevents all the requested
+        /// data from being moved through the pipeline</exception>
+        /// <remarks>Any exception other than PipelineException represents either
+        /// a bug in the pipeline implementation because it was unanticipated or a failure in
+        /// lower level runtime/OS/hardware to keep the process in a consistent state</remarks>
+        public Task RunAsync(CancellationToken token)
+        {
+            Task runTask = null;
+            lock (_lock)
+            {
+                if (_isCleanedUp)
+                {
+                    runTask = _runTask ?? Task.CompletedTask;
+                }
+                else
+                {
+                    if (_runTask == null)
+                    {
+                        _runTask = RunAsyncCore(token);
+                    }
+                    runTask = _runTask;
+                }
+            }
+            return runTask;
+        }
+
+        private async Task RunAsyncCore(CancellationToken token)
+        {
+            using (var linkedSource = CancellationTokenSource.CreateLinkedTokenSource(token, _disposeSource.Token))
+            {
+                try
+                {
+                    linkedSource.Token.ThrowIfCancellationRequested();
+                    await OnRun(linkedSource.Token);
+                }
+                catch (OperationCanceledException)
+                {
+                    //Give precedence to the parameter token rather than the linked token
+                    token.ThrowIfCancellationRequested();
+                    throw;
+                }
+                finally
+                {
+                    await Cleanup();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Causes an unstarted or running pipeline to transition to the stopping state. In this
+        /// state data flow from the source will be stopped and any in-flight data is gracefully
+        /// drained. Calling this more than once doesn't have any additional effect and returns
+        /// the same Task. Once the pipeline transitions to the Stopped state the returned Task
+        /// will be complete or cancelled.
+        /// </summary>
+        /// <param name="cancelToken">If this token is cancelled, it aborts the operation without consideration for
+        /// preserving the data</param>
+        /// <exception cref="PipelineException">For any error that prevents all the requested
+        /// data from being moved through the pipeline</exception>
+        /// <remarks>Any exception other than PipelineException represents either
+        /// a bug in the pipeline implementation because it was unanticipated or a failure in
+        /// lower level runtime/OS/hardware to keep the process in a consistent state</remarks>
+        public Task StopAsync(CancellationToken token = default)
         {
             Task stopTask = null;
             lock (_lock)
@@ -62,12 +139,45 @@ namespace Microsoft.Diagnostics.Monitoring
                 {
                     if (_stopTask == null)
                     {
-                        
+                        _stopTask = StopAsyncCore(token);
                     }
                     stopTask = _stopTask;
                 }
-                return stopTask;
             }
+            return stopTask;
+        }
+
+        private async Task StopAsyncCore(CancellationToken token)
+        {
+            using (var linkedSource = CancellationTokenSource.CreateLinkedTokenSource(token, _disposeSource.Token))
+            {
+                try
+                {
+                    linkedSource.Token.ThrowIfCancellationRequested();
+                    await OnStop(linkedSource.Token);
+                }
+                catch (OperationCanceledException)
+                {
+                    await Cleanup();
+                    //Give precedence to the parameter token rather than the linked token
+                    token.ThrowIfCancellationRequested();
+                    throw;
+                }
+            }
+        }
+
+        private Task Cleanup()
+        {
+            Task cleanupTask = null;
+            lock (_lock)
+            {
+                if (_cleanupTask == null)
+                {
+                    _cleanupTask = OnCleanup();
+                }
+                cleanupTask = _cleanupTask;
+            }
+            return cleanupTask;
         }
 
         /// <summary>

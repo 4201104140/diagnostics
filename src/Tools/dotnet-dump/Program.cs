@@ -16,7 +16,7 @@ namespace Microsoft.Diagnostics.Tools.Dump
         public static Task<int> Main(string[] args)
         {
             var parser = new CommandLineBuilder()
-
+                .AddCommand(CollectCommand())
                 .Build();
 
             return parser.InvokeAsync(args);
@@ -26,7 +26,9 @@ namespace Microsoft.Diagnostics.Tools.Dump
             new Command(name: "collect", description: "Capture dumps from a process")
             {
                 // Handler
-                CommandHandler.Create<IConsole, int, string, bool, Du>
-            }
+                CommandHandler.Create<IConsole, int, string, bool, Dumper.DumpTypeOption, string>(new Dumper().Collect),
+                // Options
+
+            };
     }
 }

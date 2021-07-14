@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "DotnetDumpCommands": {
-      "commandName": "Project",
-      "commandLineArgs": "DumpCommand dumpgen"
-    }
-  }
-}
