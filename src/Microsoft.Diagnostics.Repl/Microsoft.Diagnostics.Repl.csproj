@@ -16,4 +16,8 @@
     <PackageReference Include="System.CommandLine" Version="$(SystemCommandLineVersion)" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Console\" />
+  </ItemGroup>
+
 </Project>

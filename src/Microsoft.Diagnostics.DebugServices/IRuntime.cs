@@ -1,9 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
 
 namespace Microsoft.Diagnostics.DebugServices
 {
+    /// <summary>
+    /// The runtime type.
+    /// </summary>
     public enum RuntimeType
     {
         Desktop = 0,
@@ -18,14 +23,19 @@ namespace Microsoft.Diagnostics.DebugServices
     public interface IRuntime
     {
         /// <summary>
-        /// The per target services like clrmed' CirInfo abd ClrRuntime,
-        /// </summary>
-        IServiceProvider Services { get; }
-
-        /// <summary>
-        /// RuntimeId
+        /// Runtime id
         /// </summary>
         int Id { get; }
+
+        /// <summary>
+        /// The target for this runtime.
+        /// </summary>
+        ITarget Target { get; }
+
+        /// <summary>
+        /// The per target services like clrmd's ClrInfo and ClrRuntime.
+        /// </summary>
+        IServiceProvider Services { get; }
 
         /// <summary>
         /// Returns the runtime OS and type
@@ -33,20 +43,23 @@ namespace Microsoft.Diagnostics.DebugServices
         RuntimeType RuntimeType { get; }
 
         /// <summary>
-        /// Returns the runtime modules
+        /// Returns the runtime module
         /// </summary>
         IModule RuntimeModule { get; }
 
         /// <summary>
-        /// Return the SAC file path
+        /// Directory of the runtime module (coreclr.dll, libcoreclr.so, etc.)
         /// </summary>
-        /// <returns></returns>
+        string RuntimeModuleDirectory { get; set; }
+
+        /// <summary>
+        /// Returns the DAC file path
+        /// </summary>
         string GetDacFilePath();
 
         /// <summary>
         /// Returns the DBI file path
         /// </summary>
-        /// <returns></returns>
         string GetDbiFilePath();
     }
 }

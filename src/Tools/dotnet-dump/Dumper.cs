@@ -1,4 +1,7 @@
-﻿
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
 using Microsoft.Diagnostics.NETCore.Client;
 using Microsoft.Internal.Common.Utils;
 using System;
@@ -36,7 +39,7 @@ namespace Microsoft.Diagnostics.Tools.Dump
             {
                 if (processId != 0)
                 {
-                    Console.WriteLine("Can only specified either --name or --process-id options");
+                    Console.WriteLine("Can only specify either --name or --process-id option.");
                     return 0;
                 }
                 processId = CommandUtils.FindProcessIdWithName(name);
@@ -48,7 +51,7 @@ namespace Microsoft.Diagnostics.Tools.Dump
 
             if (processId == 0)
             {
-                Console.Error.WriteLine("ProcessId is required");
+                console.Error.WriteLine("ProcessId is required.");
                 return 1;
             }
 
@@ -60,7 +63,7 @@ namespace Microsoft.Diagnostics.Tools.Dump
                     string timestamp = $"{DateTime.Now:yyyyMMdd_HHmmss}";
                     output = Path.Combine(Directory.GetCurrentDirectory(), RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? $"dump_{timestamp}.dmp" : $"core_{timestamp}");
                 }
-                // Make sure the dump path is NOT relative. This path could be sent to the runtime
+                // Make sure the dump path is NOT relative. This path could be sent to the runtime 
                 // process on Linux which may have a different current directory.
                 output = Path.GetFullPath(output);
 
@@ -78,7 +81,7 @@ namespace Microsoft.Diagnostics.Tools.Dump
                         dumpTypeMessage = "dump";
                         break;
                 }
-                console.Out.WriteLine($"Writing {dumpTypeMessage} to output");
+                console.Out.WriteLine($"Writing {dumpTypeMessage} to {output}");
 
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
@@ -89,7 +92,24 @@ namespace Microsoft.Diagnostics.Tools.Dump
                 }
                 else
                 {
-                    
+                    var client = new DiagnosticsClient(processId);
+
+                    DumpType dumpType = DumpType.Normal;
+                    switch (type)
+                    {
+                        case DumpTypeOption.Full:
+                            dumpType = DumpType.Full;
+                            break;
+                        case DumpTypeOption.Heap:
+                            dumpType = DumpType.WithHeap;
+                            break;
+                        case DumpTypeOption.Mini:
+                            dumpType = DumpType.Normal;
+                            break;
+                    }
+
+                    // Send the command to the runtime to initiate the core dump
+                    client.WriteDump(dumpType, output, diag);
                 }
             }
             catch (Exception ex) when

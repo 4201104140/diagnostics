@@ -15,11 +15,12 @@ namespace Microsoft.Diagnostics.NETCore.Client
     /// </summary>
     internal enum DiagnosticsIpcError : uint
     {
+        InvalidArgument = 0x80070057,
         ProfilerAlreadyActive = 0x8013136A,
-        BadEncoding           = 0x80131384,
-        UnknownCommand        = 0x80131385,
-        UnknownMagic          = 0x80131386,
-        UnknownError          = 0x80131387
+        BadEncoding = 0x80131384,
+        UnknownCommand = 0x80131385,
+        UnknownMagic = 0x80131386,
+        UnknownError = 0x80131387,
     }
 
     /// <summary>
@@ -88,7 +89,7 @@ namespace Microsoft.Diagnostics.NETCore.Client
         public IpcHeader Header { get; private set; } = default;
 
         public byte[] Serialize()
-        { 
+        {
             byte[] serializedData = null;
             // Verify things will fit in the size capacity
             Header.Size = checked((UInt16)(IpcHeader.HeaderSizeInBytes + Payload.Length));

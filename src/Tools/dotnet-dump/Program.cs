@@ -1,4 +1,7 @@
-﻿
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
 using Microsoft.Internal.Common.Commands;
 using Microsoft.Tools.Common;
 using System;
@@ -17,6 +20,8 @@ namespace Microsoft.Diagnostics.Tools.Dump
         {
             var parser = new CommandLineBuilder()
                 .AddCommand(CollectCommand())
+                .AddCommand(ProcessStatusCommandHandler.ProcessStatusCommand("Lists the dotnet processes that dumps can be collected"))
+                .UseDefaults()
                 .Build();
 
             return parser.InvokeAsync(args);
@@ -28,7 +33,57 @@ namespace Microsoft.Diagnostics.Tools.Dump
                 // Handler
                 CommandHandler.Create<IConsole, int, string, bool, Dumper.DumpTypeOption, string>(new Dumper().Collect),
                 // Options
-
+                ProcessIdOption(), OutputOption(), DiagnosticLoggingOption(), TypeOption(), ProcessNameOption()
             };
+
+        private static Option ProcessIdOption() =>
+            new Option(
+                aliases: new[] { "-p", "--process-id" },
+                description: "The process id to collect a memory dump.")
+            {
+                Argument = new Argument<int>(name: "pid")
+            };
+
+        private static Option ProcessNameOption() =>
+            new Option(
+                aliases: new[] { "-n", "--name" },
+                description: "The name of the process to collect a memory dump.")
+            {
+                Argument = new Argument<string>(name: "name")
+            };
+
+        private static Option OutputOption() =>
+            new Option(
+                aliases: new[] { "-o", "--output" },
+                description: @"The path where collected dumps should be written. Defaults to '.\dump_YYYYMMDD_HHMMSS.dmp' on Windows and './core_YYYYMMDD_HHMMSS' 
+on Linux where YYYYMMDD is Year/Month/Day and HHMMSS is Hour/Minute/Second. Otherwise, it is the full path and file name of the dump.")
+            {
+                Argument = new Argument<string>(name: "output_dump_path")
+            };
+
+        private static Option DiagnosticLoggingOption() =>
+            new Option(
+                alias: "--diag",
+                description: "Enable dump collection diagnostic logging.")
+            {
+                Argument = new Argument<bool>(name: "diag")
+            };
+
+        private static Option TypeOption() =>
+            new Option(
+                alias: "--type",
+                description: @"The dump type determines the kinds of information that are collected from the process. There are several types: Full - The largest dump containing all memory including the module images. Heap - A large and relatively comprehensive dump containing module lists, thread lists, all stacks, exception information, handle information, and all memory except for mapped images. Mini - A small dump containing module lists, thread lists, exception information and all stacks.")
+            {
+                Argument = new Argument<Dumper.DumpTypeOption>(name: "dump_type", getDefaultValue: () => Dumper.DumpTypeOption.Full)
+            };
+
+        private static Command AnalyzeCommand() => 
+            new Command(
+                name: "analyze",
+                description: "Starts am interative shell with debugging commands to explore a dump")
+            {
+                // Handler
+                CommandHandler.Create<FileInfo, string[]>(new)
+            }
     }
 }
