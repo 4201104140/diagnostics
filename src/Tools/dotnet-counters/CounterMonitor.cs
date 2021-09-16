@@ -1,61 +1,63 @@
-﻿
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
 using Microsoft.Diagnostics.NETCore.Client;
+using Microsoft.Diagnostics.Tools.Counters.Exporters;
+using Microsoft.Diagnostics.Tracing;
+using Microsoft.Internal.Common.Utils;
 using System;
 using System.Collections.Generic;
 using System.CommandLine;
+using System.CommandLine.IO;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
+using System.Diagnostics.Tracing;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-
-using Microsoft.Diagnostics.Tracing;
-using Microsoft.Diagnostics.Tools.Counters.Exporters;
-using Microsoft.Internal.Common.Utils;
-using System.CommandLine.IO;
 
 namespace Microsoft.Diagnostics.Tools.Counters
 {
     public class CounterMonitor
     {
+        const int BufferDelaySecs = 1;
+
         private int _processId;
         private int _interval;
-        private List<string> _counterList;
+        private CounterSet _counterList;
         private CancellationToken _ct;
         private IConsole _console;
         private ICounterRenderer _renderer;
-        private CounterFilter filter;
         private string _output;
-        private bool pauseCmdSet;
-        private ManualResetEvent shouldExit;
-        private bool shouldResumeRuntime;
+        private bool _pauseCmdSet;
+        private TaskCompletionSource<int> _shouldExit;
+        private bool _resumeRuntime;
         private DiagnosticsClient _diagnosticsClient;
         private EventPipeSession _session;
+        private string _metricsEventSourceSessionId;
+        private int _maxTimeSeries;
+        private int _maxHistograms;
+
+        class ProviderEventState
+        {
+            public DateTime FirstReceiveTimestamp;
+            public bool InstrumentEventObserved;
+        }
+        private Dictionary<string, ProviderEventState> _providerEventStates = new Dictionary<string, ProviderEventState>();
+        private Queue<CounterPayload> _bufferedEvents = new Queue<CounterPayload>();
 
         public CounterMonitor()
         {
-            filter = new CounterFilter();
-            pauseCmdSet = false;
+            _pauseCmdSet = false;
+            _metricsEventSourceSessionId = Guid.NewGuid().ToString();
+            _shouldExit = new TaskCompletionSource<int>();
         }
 
         private void DynamicAllMonitor(TraceEvent obj)
         {
-            // If we are paused, ignore the event. 
-            // There's a potential race here between the two tasks but not a huge deal if we miss by one event.
-            _renderer.ToggleStatus(pauseCmdSet);
-
-            if (obj.EventName.Equals("EventCounters"))
-            {
-                IDictionary<string, object> payloadVal = (IDictionary<string, object>)(obj.PayloadValue(0));
-                IDictionary<string, object> payloadFields = (IDictionary<string, object>)(payloadVal["Payload"]);
-
-                // If it's not a counter we asked for, ignore it.
-                if (!filter.Filter(obj.ProviderName, payloadFields["Name"].ToString())) return;
-
-                ICounterPayload payload = payloadFields["CounterType"].Equals("Sum") ? (ICounterPayload)new IncrementingCounterPayload(payloadFields, _interval) : (ICounterPayload)new CounterPayload(payloadFields);
-                _renderer.CounterPayloadReceived(obj.ProviderName, payload, pauseCmdSet);
-            }
+            
         }
 
         private void StopMonitor()
@@ -88,28 +90,37 @@ namespace Microsoft.Diagnostics.Tools.Counters
             _renderer.Stop();
         }
 
-        public async Task<int> Monitor(CancellationToken ct, List<string> counter_list, string counters, IConsole console, int processId, int refreshInterval, string name, string diagnosticPort, bool resumeRuntime)
+        public async Task<int> Monitor(
+            CancellationToken ct,
+            List<string> counter_list,
+            string counters,
+            IConsole console,
+            int processId,
+            int refreshInterval,
+            string name,
+            string diagnosticPort,
+            bool resumeRuntime,
+            int maxHistograms,
+            int maxTimeSeries)
         {
-            if (!ProcessLauncher.Launcher.HasChildProc && !CommandUtils.ValidateArgumentsForAttach(processId, name, diagnosticPort, out _processId))
+            try
             {
-
+                // System.CommandLine does have an option to specify argumnets are unit and it would validate they are non-negative. However the error
+                // message is "cannot parse argument '-1' for option '--maxTimeServices' as expected type System.UInt32' which is not as user friendly
+                // If there was another option to leverage System.Commandline that provides a little more user friendly error message we could switch
+                // to it
+                ValidateNonNegative(maxHistograms, nameof(maxHistograms));
+                ValidateNonNegative(maxTimeSeries, nameof(maxTimeSeries));
+                if (!ProcessLauncher.Launcher.HasChildProc && !CommandUtils)
             }
-            await Task.CompletedTask;
-            return 0;
         }
 
-        public async Task<int> Collect(CancellationToken ct, List<string> counter_list, string counters, IConsole console, int processId, int refreshInterval, CountersExportFormat format, string output, string name, string diagnosticPort, bool resumeRuntime)
+        static private void ValidateNonNegative(int value, string argName)
         {
-            if (!ProcessLauncher.Launcher.HasChildProc)
+            if (value < 0)
             {
-                return ReturnCode.ArgumentError;
+                throw new CommandLineErrorException($"Argument --{argName} must be non-negative");
             }
-            shouldExit = new ManualResetEvent(false);
-            _ct.Register(() => shouldExit.Set());
-
-
-            await Task.CompletedTask;
-            return 0;
         }
 
         private string BuildProviderString()

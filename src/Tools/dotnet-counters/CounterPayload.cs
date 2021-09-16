@@ -4,102 +4,35 @@ using System.Text;
 
 namespace Microsoft.Diagnostics.Tools.Counters
 {
-    public interface ICounterPayload
+    public class CounterPayload
     {
-        string GetName();
-        double GetValue();
-        string GetDisplay();
-        string GetCounterType();
+        public CounterPayload(string providerName, string name, string displayName, string displayUnits, string tags, double value, DateTime timestamp, string type)
+        {
+            ProviderName = providerName;
+            Name = name;
+            Tags = tags;
+            Value = value;
+            Timestamp = timestamp;
+            CounterType = type;
+        }
+
+        public string ProviderName { get; private set; }
+        public string Name { get; private set; }
+        public double Value { get; private set; }
+        public virtual string DisplayName { get; protected set; }
+        public string CounterType { get; private set; }
+        public DateTime Timestamp { get; private set; }
+        public string Tags { get; private set; }
     }
 
-
-    class CounterPayload : ICounterPayload
+    class GaugePayload : CounterPayload
     {
-        public string m_Name;
-        public double m_Value;
-        public string m_DisplayName;
-        public string m_DisplayUnits;
-
-        public CounterPayload(IDictionary<string, object> payloadFields)
+        public GaugePayload(string providerName, string name, string displayName, string displayUnits, string tags, double value, DateTime timestamp) :
+            base(providerName, name, displayName, displayUnits, tags, value, timestamp, "Metric")
         {
-            m_Name = payloadFields["Name"].ToString();
-            m_Value = (double)payloadFields["Mean"];
-            m_DisplayName = payloadFields["DisplayName"].ToString();
-            m_DisplayUnits = payloadFields["DisplayUnits"].ToString();
-
             // In case these properties are not provided, set them to appropriate values.
-            m_DisplayName = m_DisplayName.Length == 0 ? m_Name : m_DisplayName;
-        }
-
-        public string GetName()
-        {
-            return m_Name;
-        }
-
-        public double GetValue()
-        {
-            return m_Value;
-        }
-
-        public string GetDisplay()
-        {
-            if (m_DisplayUnits.Length > 0)
-            {
-                return $"{m_DisplayName} ({m_DisplayUnits})";
-            }
-            return $"{m_DisplayName}";
-        }
-
-        public string GetCounterType()
-        {
-            return "Metric";
-        }
-    }
-
-    class IncrementingCounterPayload : ICounterPayload
-    {
-        public string m_Name;
-        public double m_Value;
-        public string m_DisplayName;
-        public string m_Interval;
-        public string m_DisplayUnits;
-
-        public IncrementingCounterPayload(IDictionary<string, object> payloadFields, int interval)
-        {
-            m_Name = payloadFields["Name"].ToString();
-            m_Value = (double)payloadFields["Increment"];
-            m_DisplayName = payloadFields["DisplayName"].ToString();
-            m_DisplayUnits = payloadFields["DisplayUnits"].ToString();
-            m_Interval = interval.ToString() + " sec";
-
-            // In case these properties are not provided, set them to appropriate values.
-            m_DisplayName = m_DisplayName.Length == 0 ? m_Name : m_DisplayName;
-        }
-
-        public string GetName()
-        {
-            return m_Name;
-        }
-
-        public double GetValue()
-        {
-            return m_Value;
-        }
-
-        public string GetDisplay()
-        {
-            return $"{m_DisplayName} ({GetDisplayUnits()} / {m_Interval})";
-        }
-
-        public string GetCounterType()
-        {
-            return "Rate";
-        }
-
-        private string GetDisplayUnits()
-        {
-            if (m_DisplayUnits.Length == 0) return "Count";
-            return m_DisplayUnits;
+            string counterName = string.IsNullOrEmpty(displayName) ? name : displayName;
+            DisplayName = !string.IsNullOrEmpty(displayUnits) ? $"{counterName} ({displayUnits})" : counterName;
         }
     }
 }

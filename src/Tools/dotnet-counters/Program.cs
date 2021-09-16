@@ -19,8 +19,32 @@ namespace Microsoft.Diagnostics.Tools.Counters
 
     internal class Program
     {
-        delegate Task<int> CollectDelegate(CancellationToken ct, List<string> counter_list, string counters, IConsole console, int processId, int refreshInterval, CountersExportFormat format, string output, string processName, string port, bool resumeRuntime);
-        delegate Task<int> MonitorDelegate(CancellationToken ct, List<string> counter_list, string counters, IConsole console, int processId, int refreshInterval, string processName, string port, bool resumeRuntime);
+        delegate Task<int> CollectDelegate(
+            CancellationToken ct,
+            List<string> counter_list,
+            string counters,
+            IConsole console,
+            int processId,
+            int refreshInterval,
+            CountersExportFormat format,
+            string output,
+            string processName,
+            string port,
+            bool resumeRuntime,
+            int maxHistograms,
+            int maxTimeSeries);
+        delegate Task<int> MonitorDelegate(
+            CancellationToken ct,
+            List<string> counter_list,
+            string counters,
+            IConsole console,
+            int processId,
+            int refreshInterval,
+            string processName,
+            string port,
+            bool resumeRuntime,
+            int maxHistograms,
+            int maxTimeSeries);
 
         private static Command MonitorCommand() =>
             new Command(

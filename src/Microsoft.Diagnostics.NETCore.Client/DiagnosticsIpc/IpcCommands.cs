@@ -10,12 +10,12 @@ namespace Microsoft.Diagnostics.NETCore.Client
 {
     internal enum DiagnosticsServerCommandSet : byte
     {
-        Dump = 0x01,
-        EventPipe = 0x02,
-        Profiler = 0x03,
-        Process = 0x04,
+        Dump           = 0x01,
+        EventPipe      = 0x02,
+        Profiler       = 0x03,
+        Process        = 0x04,
 
-        Server = 0xFF,
+        Server         = 0xFF,
     }
 
     // For .NET 5 Preview 7 and Preview 8, use this with the
@@ -38,8 +38,8 @@ namespace Microsoft.Diagnostics.NETCore.Client
 
     internal enum EventPipeCommandId : byte
     {
-        StopTracing = 0x01,
-        CollectTracing = 0x02,
+        StopTracing     = 0x01,
+        CollectTracing  = 0x02,
         CollectTracing2 = 0x03,
     }
 
