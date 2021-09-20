@@ -22,7 +22,6 @@ x64/
 .packages/
 .tools/
 .vscode/
-out
 
 # Per-user project properties
 launchSettings.json

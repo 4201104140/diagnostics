@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "dotnet-trace": {
-      "commandName": "Project",
-      "commandLineArgs": "collect"
-    }
-  }
-}
