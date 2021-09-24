@@ -23,3 +23,15 @@ stages:
   - stage: build
     displayName: Build and Test Diagnostics
     jobs:
+
+    ############################
+    #                          #
+    #    Source Build legs     #
+    #                          #
+    ############################
+
+    - template: /eng/common/templates/job/source-build.yml
+      parameters:
+        platform:
+          pool: NetCorePublic-Pool
+          name: Complete
